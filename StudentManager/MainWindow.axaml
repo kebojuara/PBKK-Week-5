@@ -1,0 +1,127 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:StudentManager.ViewModels"
+        xmlns:models="using:StudentManager.Models"
+        x:Class="StudentManager.MainWindow"
+        x:DataType="vm:StudentViewModel"
+        Title="Student Management System"
+        Width="1280" Height="820"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Banner Header -->
+        <Border Grid.Row="0" Background="#1565C0" CornerRadius="10" Padding="20" Margin="0,0,0,15">
+            <StackPanel>
+                <TextBlock Text="STUDENT MANAGEMENT SYSTEM" Foreground="White" FontSize="26" FontWeight="Bold"/>
+                <TextBlock Text="Manage student registration data" Foreground="White" FontSize="14" Opacity="0.85"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Form Input & Info Panel -->
+        <Grid Grid.Row="1" Margin="0,0,0,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Form Kiri -->
+            <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                <Grid ColumnDefinitions="*,*">
+                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                        <TextBlock Text="NIM" Margin="0,0,0,2"/>
+                        <TextBox Text="{Binding SelectedStudent.NIM}" Margin="0,0,0,8"/>
+
+                        <TextBlock Text="Nama" Margin="0,0,0,2"/>
+                        <TextBox Text="{Binding SelectedStudent.Nama}" Margin="0,0,0,8"/>
+
+                        <TextBlock Text="Program Studi" Margin="0,0,0,2"/>
+                        <ComboBox ItemsSource="{Binding AvailablePrograms}"
+                                  SelectedItem="{Binding SelectedProgram}"
+                                  HorizontalAlignment="Stretch"
+                                  Margin="0,0,0,8">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:StudyProgram">
+                                    <TextBlock Text="{Binding ProgramName}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <TextBlock Text="Gender" Margin="0,0,0,2"/>
+                        <ComboBox ItemsSource="{Binding GenderOptions}"
+                                  SelectedItem="{Binding SelectedStudent.Gender}"
+                                  HorizontalAlignment="Stretch"
+                                  Margin="0,0,0,8"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                        <TextBlock Text="Email" Margin="0,0,0,2"/>
+                        <TextBox Text="{Binding SelectedStudent.Email}" Margin="0,0,0,8"/>
+
+                        <TextBlock Text="No. Telepon" Margin="0,0,0,2"/>
+                        <TextBox Text="{Binding SelectedStudent.PhoneNumber}" Margin="0,0,0,8"/>
+
+                        <TextBlock Text="Alamat" Margin="0,0,0,2"/>
+                        <TextBox Text="{Binding SelectedStudent.Address}" Margin="0,0,0,8"/>
+                    </StackPanel>
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <Button Content="Simpan" Command="{Binding SaveCommand}" Background="#1976D2" Foreground="White" Padding="20,10" Margin="0,0,10,0"/>
+                    <Button Content="Reset" Command="{Binding ResetCommand}" Padding="20,10" Margin="0,0,10,0"/>
+                    <Button Content="Hapus" Command="{Binding DeleteCommand}" Background="#D32F2F" Foreground="White" Padding="20,10"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Card Informasi Kanan -->
+            <Border Grid.Column="1" Background="#F1FFF7" CornerRadius="10" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="INFORMASI" FontSize="20" FontWeight="Bold" Foreground="#159447" Margin="0,0,0,10"/>
+                    <TextBlock Text="Total Mahasiswa"/>
+                    <TextBlock Text="{Binding TotalStudents}" FontSize="26" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <TextBlock Text="Teknik Informatika"/>
+                    <TextBlock Text="{Binding TotalInformatika}" FontSize="22" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <TextBlock Text="Sistem Informasi"/>
+                    <TextBlock Text="{Binding TotalSistemInformasi}" FontSize="22" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <TextBlock Text="Laki-laki"/>
+                    <TextBlock Text="{Binding TotalLakiLaki}" FontSize="22" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <TextBlock Text="Perempuan"/>
+                    <TextBlock Text="{Binding TotalPerempuan}" FontSize="22" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Search Bar -->
+        <Grid Grid.Row="2" Margin="0,0,0,10" ColumnDefinitions="*,Auto">
+            <TextBox Grid.Column="0" Text="{Binding SearchText}" PlaceholderText="Cari berdasarkan NIM, Nama, atau Jurusan..." Padding="10" Margin="0,0,10,0"/>
+            <Button Grid.Column="1" Content="Cari" Command="{Binding SearchCommand}" Padding="25,10"/>
+        </Grid>
+
+        <!-- DataGrid Tabel Mahasiswa -->
+        <DataGrid Grid.Row="3"
+                  ItemsSource="{Binding Students}"
+                  SelectedItem="{Binding SelectedRow, Mode=TwoWay}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  GridLinesVisibility="All"
+                  BorderThickness="1"
+                  BorderBrush="#DDDDDD">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="NIM" Binding="{Binding NIM}" Width="110"/>
+                <DataGridTextColumn Header="Nama" Binding="{Binding Nama}" Width="160"/>
+                <DataGridTextColumn Header="Program Studi" Binding="{Binding Jurusan}" Width="160"/>
+                <DataGridTextColumn Header="Gender" Binding="{Binding Gender}" Width="100"/>
+                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="160"/>
+                <DataGridTextColumn Header="No. Telepon" Binding="{Binding PhoneNumber}" Width="130"/>
+                <DataGridTextColumn Header="Tanggal Lahir" Binding="{Binding BirthDate, StringFormat='{}{0:dd/MM/yyyy}', Mode=OneWay}" Width="120"/>
+                <DataGridTextColumn Header="Alamat" Binding="{Binding Address}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
